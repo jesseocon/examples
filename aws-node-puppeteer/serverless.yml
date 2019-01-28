@@ -1,13 +1,13 @@
 service: scrapper-lambda
 provider:
   name: aws
-  profile: <your aws profile>
+  profile: serverless-puppeteer
   runtime: nodejs8.10
 
 plugins:
   - serverless-offline
   - serverless-plugin-chrome
-  
+
 package:
   exclude:
     - node_modules/puppeteer/.local-chromium/**
