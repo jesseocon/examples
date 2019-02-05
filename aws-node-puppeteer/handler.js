@@ -3,7 +3,7 @@ const { getChrome } = require('./chrome-script');
 const { homepageOpenAllAccess } = require('./authFunctions');
 const { cartPurchase, enrollWithEmail } = require('./cartPurchase');
 
-module.exports.hello = async (event) => {
+const worker = async (event) => {
   const { url } = event.queryStringParameters;
 
   const chrome = await getChrome();
@@ -18,6 +18,28 @@ module.exports.hello = async (event) => {
   await homepageOpenAllAccess(page)
   await enrollWithEmail(page)
   await cartPurchase(page)
+
+  const content = await page.evaluate(() => document.body.innerHTML);
+}
+
+module.exports.hello = async (event) => {
+  // worker(event)
+  const { url } = event.queryStringParameters;
+
+  const chrome = await getChrome();
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: chrome.endpoint,
+  });
+
+
+  const page = await browser.newPage();
+  await page.goto(url, { waitUntil: 'networkidle0' });
+
+  await homepageOpenAllAccess(page)
+  await enrollWithEmail(page)
+  await cartPurchase(page)
+
+  await page.waitForSelector('.heading-primary.welcome-header-title')
 
   const content = await page.evaluate(() => document.body.innerHTML);
   return {
