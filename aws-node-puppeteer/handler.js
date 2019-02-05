@@ -26,6 +26,7 @@ module.exports.hello = async (event) => {
   // worker(event)
   const { url } = event.queryStringParameters;
 
+  console.log('something for the logs: ***********')
   const chrome = await getChrome();
   const browser = await puppeteer.connect({
     browserWSEndpoint: chrome.endpoint,
